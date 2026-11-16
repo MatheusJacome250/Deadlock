@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <limits.h>
+
 typedef struct banker {
     int *available;
     int **maximum;
@@ -48,7 +49,6 @@ int **criar_matriz(int linhas, int colunas) {
 
     return matriz;
 }
-
 void liberar_matriz(int **matriz, int linhas) {
     if (matriz == NULL) {
         return;
@@ -60,7 +60,6 @@ void liberar_matriz(int **matriz, int linhas) {
 
     free(matriz);
 }
-
 int converter_numero(const char *texto, int *numero) {
     if (texto == NULL || numero == NULL) {
         return 0;
@@ -93,7 +92,6 @@ int converter_numero(const char *texto, int *numero) {
     *numero = (int)valor;
     return 1;
 }
-
 int ler_linha_cliente(char *linha, int recursos, int *valores) {
     if (linha == NULL || valores == NULL || recursos <= 0) {
         return 0;
@@ -348,7 +346,6 @@ int release_resources(banker *estado, int cliente, const int liberacao[]) {
 
     return 1;
 }
-
 void liberar_banqueiro(banker *estado) {
     if (estado == NULL) {
         return;
@@ -365,4 +362,88 @@ void liberar_banqueiro(banker *estado) {
     estado->available = NULL;
     estado->customers = 0;
     estado->resources = 0;
+}
+void imprimir_vetor(FILE *saida, const int valores[], int quantidade) {
+    for (int i = 0; i < quantidade; i++) {
+        if (i > 0) {
+            fputc(' ', saida);
+        }
+
+        fprintf(saida, "%d", valores[i]);
+    }
+}
+int largura_vetor(const int valores[], int quantidade) {
+    int largura = 0;
+
+    for (int i = 0; i < quantidade; i++) {
+        if (i > 0) {
+            largura++;
+        }
+
+        int caracteres = snprintf(NULL, 0, "%d", valores[i]);
+        if (caracteres < 0) {
+            return -1;
+        }
+
+        largura += caracteres;
+    }
+
+    return largura;
+}
+
+int imprimir_estado(FILE *saida, const banker *estado) {
+    if (saida == NULL || estado == NULL || estado->maximum == NULL || estado->allocation == NULL || estado->need == NULL || estado->available == NULL) {
+        return 0;
+    }
+
+    int largura_maximo = 10;
+    int largura_alocacao = 12;
+
+    for (int i = 0; i < estado->customers; i++) {
+        int maximo = largura_vetor(estado->maximum[i], estado->resources);
+        int alocacao = largura_vetor(estado->allocation[i], estado->resources);
+
+        if (maximo < 0 || alocacao < 0) {
+            return 0;
+        }
+
+        if (maximo + 1 > largura_maximo) {
+            largura_maximo = maximo + 1;
+        }
+
+        if (alocacao + 1 > largura_alocacao) {
+            largura_alocacao = alocacao + 1;
+        }
+    }
+
+    fprintf(saida, "%-*s|   %-*s|   NEED\n",
+            largura_maximo, "MAXIMUM",
+            largura_alocacao, "ALLOCATION");
+
+    for (int i = 0; i < estado->customers; i++) {
+        int maximo = largura_vetor(estado->maximum[i], estado->resources);
+        int alocacao = largura_vetor(estado->allocation[i], estado->resources);
+
+        imprimir_vetor(saida, estado->maximum[i], estado->resources);
+        for (int espacos = maximo; espacos < largura_maximo; espacos++) {
+            fputc(' ', saida);
+        }
+
+        fputs("|   ", saida);
+
+        imprimir_vetor(saida, estado->allocation[i], estado->resources);
+        for (int espacos = alocacao; espacos < largura_alocacao; espacos++) {
+            fputc(' ', saida);
+        }
+
+        fputs("|   ", saida);
+        imprimir_vetor(saida, estado->need[i], estado->resources);
+        fputs(" \n", saida);
+    }
+
+    fputs("AVAILABLE ", saida);
+    imprimir_vetor(saida, estado->available, estado->resources);
+    fputs(" \n", saida);
+
+    return !ferror(saida);
 }
