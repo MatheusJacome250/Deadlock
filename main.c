@@ -621,3 +621,53 @@ int processar_comandos(banker *estado, const char *nome_arquivo, FILE *saida) {
 
     return leitura_ok;
 }
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        fprintf(stderr, "Uso: ./banker <quantidade de cada recurso>\n");
+        return EXIT_FAILURE;
+    }
+
+    banker estado = {0};
+    estado.resources = argc - 1;
+
+    estado.available = calloc(estado.resources, sizeof *estado.available);
+    if (estado.available == NULL) {
+        fprintf(stderr, "Erro: memoria insuficiente.\n");
+        return EXIT_FAILURE;
+    }
+
+    for (int i = 0; i < estado.resources; i++) {
+        if (!converter_numero(argv[i + 1], &estado.available[i])) {
+            fprintf(stderr, "Erro: quantidade invalida para o recurso %d.\n", i);
+            liberar_banqueiro(&estado);
+            return EXIT_FAILURE;
+        }
+    }
+
+    if (!carregar_clientes(&estado, "customer.txt")) {
+        liberar_banqueiro(&estado);
+        return EXIT_FAILURE;
+    }
+
+    FILE *saida = fopen("result.txt", "w");
+    if (saida == NULL) {
+        fprintf(stderr, "Erro: nao foi possivel criar result.txt.\n");
+        liberar_banqueiro(&estado);
+        return EXIT_FAILURE;
+    }
+
+    int sucesso = processar_comandos(&estado, "commands.txt", saida);
+
+    if (fclose(saida) != 0) {
+        fprintf(stderr, "Erro ao fechar result.txt.\n");
+        sucesso = 0;
+    }
+
+    liberar_banqueiro(&estado);
+
+    if (sucesso) {
+        return EXIT_SUCCESS;
+    }
+
+    return EXIT_FAILURE;
+}
