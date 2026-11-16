@@ -390,7 +390,6 @@ int largura_vetor(const int valores[], int quantidade) {
 
     return largura;
 }
-
 int imprimir_estado(FILE *saida, const banker *estado) {
     if (saida == NULL || estado == NULL || estado->maximum == NULL || estado->allocation == NULL || estado->need == NULL || estado->available == NULL) {
         return 0;
@@ -444,6 +443,47 @@ int imprimir_estado(FILE *saida, const banker *estado) {
     fputs("AVAILABLE ", saida);
     imprimir_vetor(saida, estado->available, estado->resources);
     fputs(" \n", saida);
+
+    return !ferror(saida);
+}
+int registrar_pedido(FILE *saida, const banker *estado, int cliente, const int pedido[], resultado_pedido resultado) {
+    if (saida == NULL || estado == NULL || pedido == NULL || estado->available == NULL || cliente < 0 ||
+        cliente >= estado->customers) {
+        return 0;
+    }
+
+    if (resultado == PEDIDO_ACEITO) {
+        fprintf(saida, "Allocate to customer %d the resources ", cliente);
+        imprimir_vetor(saida, pedido, estado->resources);
+        fputc('\n', saida);
+    } else if (resultado == PEDIDO_SEM_RECURSOS) {
+        fputs("The resources ", saida);
+        imprimir_vetor(saida, estado->available, estado->resources);
+        fprintf(saida, " are not enough to customer %d request ", cliente);
+        imprimir_vetor(saida, pedido, estado->resources);
+        fputs(" \n", saida);
+    } else if (resultado == PEDIDO_INSEGURO) {
+        fprintf(saida, "The customer %d request ", cliente);
+        imprimir_vetor(saida, pedido, estado->resources);
+        fputs(" was denied because result in an unsafe state\n", saida);
+    } else if (resultado == PEDIDO_EXCEDE_NECESSIDADE) {
+        fprintf(saida, "The customer %d request ", cliente);
+        imprimir_vetor(saida, pedido, estado->resources);
+        fputs(" was denied because exceed its maximum allocation\n", saida);
+    } else {
+        return 0;
+    }
+
+    return !ferror(saida);
+}
+int registrar_liberacao(FILE *saida, const banker *estado, int cliente, const int liberacao[]) {
+    if (saida == NULL || estado == NULL || liberacao == NULL || cliente < 0 || cliente >= estado->customers) {
+        return 0;
+    }
+
+    fprintf(saida, "Release from customer %d the resources ", cliente);
+    imprimir_vetor(saida, liberacao, estado->resources);
+    fputc('\n', saida);
 
     return !ferror(saida);
 }
