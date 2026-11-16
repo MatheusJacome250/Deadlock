@@ -15,6 +15,13 @@ typedef struct banker {
     int customers;
     int resources;
 } banker;
+typedef enum {
+    PEDIDO_ACEITO,
+    PEDIDO_EXCEDE_NECESSIDADE,
+    PEDIDO_SEM_RECURSOS,
+    PEDIDO_INSEGURO,
+    PEDIDO_ERRO
+} resultado_pedido;
 
 int **criar_matriz(int linhas, int colunas) {
     if (linhas <= 0 || colunas <= 0) {
@@ -276,4 +283,49 @@ int estado_seguro(const banker *estado) {
     free(finish);
 
     return seguro;
+}
+resultado_pedido request_resources(banker *estado, int cliente, const int pedido[]) {
+    if (estado == NULL || pedido == NULL || estado->available == NULL ||estado->allocation == NULL || estado->need == NULL || cliente < 0 || cliente >= estado->customers) {
+        return PEDIDO_ERRO;
+    }
+
+    for (int j = 0; j < estado->resources; j++) {
+        if (pedido[j] < 0) {
+            return PEDIDO_ERRO;
+        }
+
+        if (pedido[j] > estado->need[cliente][j]) {
+            return PEDIDO_EXCEDE_NECESSIDADE;
+        }
+    }
+
+    for (int j = 0; j < estado->resources; j++) {
+        if (pedido[j] > estado->available[j]) {
+            return PEDIDO_SEM_RECURSOS;
+        }
+    }
+
+    for (int j = 0; j < estado->resources; j++) {
+        estado->available[j] -= pedido[j];
+        estado->allocation[cliente][j] += pedido[j];
+        estado->need[cliente][j] -= pedido[j];
+    }
+
+    int seguro = estado_seguro(estado);
+
+    if (seguro != 1) {
+        for (int j = 0; j < estado->resources; j++) {
+            estado->available[j] += pedido[j];
+            estado->allocation[cliente][j] -= pedido[j];
+            estado->need[cliente][j] += pedido[j];
+        }
+
+        if (seguro == 0) {
+            return PEDIDO_INSEGURO;
+        }
+
+        return PEDIDO_ERRO;
+    }
+
+    return PEDIDO_ACEITO;
 }
