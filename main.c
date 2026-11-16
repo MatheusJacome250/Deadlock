@@ -83,3 +83,37 @@ int converter_numero(const char *texto, int *numero) {
     *numero = (int)valor;
     return 1;
 }
+
+int ler_linha_cliente(char *linha, int recursos, int *valores) {
+    if (linha == NULL || valores == NULL || recursos <= 0) {
+        return 0;
+    }
+
+    char *campo = linha;
+
+    for (int i = 0; i < recursos; i++) {
+        char *virgula = strchr(campo, ',');
+
+        if (i < recursos - 1) {
+            if (virgula == NULL) {
+                return 0;
+            }
+
+            *virgula = '\0';
+        } else {
+            if (virgula != NULL) {
+                return 0;
+            }
+        }
+
+        if (!converter_numero(campo, &valores[i])) {
+            return 0;
+        }
+
+        if (i < recursos - 1) {
+            campo = virgula + 1;
+        }
+    }
+
+    return 1;
+}
