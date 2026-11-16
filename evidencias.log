@@ -15,3 +15,69 @@ Script started on 2026-11-16 19:19:11-03:00 [TERM="xterm-256color" TTY="/dev/pts
 [?2004lexit
 
 Script done on 2026-11-16 19:29:06-03:00 [COMMAND_EXIT_CODE="1"]
+Script started on 2026-11-16 19:29:45-03:00 [TERM="xterm-256color" TTY="/dev/pts/6" COLUMNS="218" LINES="3"]
+[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ exit./banker 10 5 7make[K cleanpwd[Kwhoami[2Pdate
+[?2004lMon Nov 16 19:29:50 -03 2026
+[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ dateexit./banker 10 5 7make[K cleanpwd[Kwhoami
+[?2004lmathe
+[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ whoami[2Pdateexit./banker 10 5 7make[K cleanpwd[K
+[?2004l/mnt/d/Deadlock
+[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ pwd
+[?2004l/mnt/d/Deadlock
+[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ pwdwhoami[2Pdateexit./banker 10 5 7make[K clean
+[?2004lrm -f banker
+[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ make cleanpwd[Kmake clean[Kmake cleanpwd[Kwhoami[2Pdateexit./banker 10 5 7make[K
+[?2004lcc -std=gnu11 -Wall -Wextra main.c -o banker
+[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [7m./banker 10 5 7[27m./banker 10 5 7
+[?2004l[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [7mcat result.txt[27mcat result.txt
+[?2004lAllocate to customer 0 the resources 0 2 1
+Allocate to customer 2 the resources 3 0 2
+Allocate to customer 1 the resources 2 0 0
+Allocate to customer 4 the resources 0 0 2
+Release from customer 0 the resources 0 1 1
+Allocate to customer 3 the resources 2 1 1
+MAXIMUM   |   ALLOCATION  |   NEED
+7 5 3     |   0 1 0       |   7 4 3 
+3 2 2     |   2 0 0       |   1 2 2 
+9 0 2     |   3 0 2       |   6 0 0 
+2 2 2     |   2 1 1       |   0 1 1 
+4 3 3     |   0 0 2       |   4 3 1 
+AVAILABLE 3 3 2 
+The resources 3 3 2 are not enough to customer 4 request 4 0 0 
+Allocate to customer 1 the resources 1 0 2
+The customer 0 request 0 2 0 was denied because result in an unsafe state
+The customer 2 request 0 1 0 was denied because exceed its maximum allocation
+[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [K]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/DeadlScript started on 2026-11-16 19:32:46-03:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="218" LINES="36"]
+[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ exit[10@cat result.tx[C./banker 10 5 7make[K cleanpwd[Kwhoami[2Pdate
+[?2004lMon Nov 16 19:32:49 -03 2026
+[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ dateexit[10@cat result.tx[C./banker 10 5 7make[K cleanpwd[Kwhoami
+[?2004lmathe
+[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ whoami[2Pdateexit[10@cat result.tx[C./banker 10 5 7make[K cleanpwd[K
+[?2004l/mnt/d/Deadlock
+[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ pwdwhoami[2Pdateexit[10@cat result.tx[C./banker 10 5 7
+[?2004l[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ ./banker 10 5 7pwd[Kwhoami[2Pdateexit[10@cat result.tx[C
+[?2004lAllocate to customer 0 the resources 0 2 1
+Allocate to customer 2 the resources 3 0 2
+Allocate to customer 1 the resources 2 0 0
+Allocate to customer 4 the resources 0 0 2
+Release from customer 0 the resources 0 1 1
+Allocate to customer 3 the resources 2 1 1
+MAXIMUM   |   ALLOCATION  |   NEED
+7 5 3     |   0 1 0       |   7 4 3 
+3 2 2     |   2 0 0       |   1 2 2 
+9 0 2     |   3 0 2       |   6 0 0 
+2 2 2     |   2 1 1       |   0 1 1 
+4 3 3     |   0 0 2       |   4 3 1 
+AVAILABLE 3 3 2 
+The resources 3 3 2 are not enough to customer 4 request 4 0 0 
+Allocate to customer 1 the resources 1 0 2
+The customer 0 request 0 2 0 was denied because result in an unsafe state
+The customer 2 request 0 1 0 was denied because exceed its maximum allocation
+[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ cat result.txt[K[7m./banker 10 5[27m./banker 10 5
+[?2004lErro: linha 1 invalida em customer.txt.
+[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ [7mecho $?[27mecho $?
+[?2004l1
+[?2004h]0;mathe@Mjcome: /mnt/d/Deadlock[01;32mmathe@Mjcome[00m:[01;34m/mnt/d/Deadlock[00m$ exit
+[?2004lexit
+
+Script done on 2026-11-16 19:37:08-03:00 [COMMAND_EXIT_CODE="0"]
