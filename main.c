@@ -217,3 +217,63 @@ int carregar_clientes(banker *estado, const char *nome_arquivo) {
 
     return 1;
 }
+int estado_seguro(const banker *estado) {
+    if (estado == NULL || estado->available == NULL || estado->allocation == NULL || estado->need == NULL || estado->customers <= 0 || estado->resources <= 0) {
+        return -1;
+    }
+
+    int *work = malloc(estado->resources * sizeof *work);
+    int *finish = calloc(estado->customers, sizeof *finish);
+
+    if (work == NULL || finish == NULL) {
+        free(work);
+        free(finish);
+        return -1;
+    }
+
+    for (int j = 0; j < estado->resources; j++) {
+        work[j] = estado->available[j];
+    }
+
+    int concluidos = 0;
+
+    while (concluidos < estado->customers) {
+        int avancou = 0;
+
+        for (int i = 0; i < estado->customers; i++) {
+            if (finish[i]) {
+                continue;
+            }
+
+            int pode_terminar = 1;
+
+            for (int j = 0; j < estado->resources; j++) {
+                if (estado->need[i][j] > work[j]) {
+                    pode_terminar = 0;
+                    break;
+                }
+            }
+
+            if (pode_terminar) {
+                for (int j = 0; j < estado->resources; j++) {
+                    work[j] += estado->allocation[i][j];
+                }
+
+                finish[i] = 1;
+                concluidos++;
+                avancou = 1;
+            }
+        }
+
+        if (!avancou) {
+            break;
+        }
+    }
+
+    int seguro = (concluidos == estado->customers);
+
+    free(work);
+    free(finish);
+
+    return seguro;
+}
