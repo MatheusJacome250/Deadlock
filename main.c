@@ -487,3 +487,137 @@ int registrar_liberacao(FILE *saida, const banker *estado, int cliente, const in
 
     return !ferror(saida);
 }
+int interpretar_comando(char *linha, const banker *estado, char *tipo, int *cliente, int valores[]) {
+    if (linha == NULL || estado == NULL || tipo == NULL || cliente == NULL || valores == NULL || estado->customers <= 0 || estado->resources <= 0) {
+        return 0;
+    }
+
+    char *contexto = NULL;
+    char *parte = strtok_r(linha, " \t\r\n", &contexto);
+
+    if (parte == NULL) {
+        return 0;
+    }
+
+    if (strcmp(parte, "*") == 0) {
+        if (strtok_r(NULL, " \t\r\n", &contexto) != NULL) {
+            return 0;
+        }
+
+        *tipo = '*';
+        return 1;
+    }
+
+    if (strcmp(parte, "RQ") == 0) {
+        *tipo = 'Q';
+    } else if (strcmp(parte, "RL") == 0) {
+        *tipo = 'L';
+    } else {
+        return 0;
+    }
+
+    parte = strtok_r(NULL, " \t\r\n", &contexto);
+    if (!converter_numero(parte, cliente) || *cliente >= estado->customers) {
+        return 0;
+    }
+
+    for (int j = 0; j < estado->resources; j++) {
+        parte = strtok_r(NULL, " \t\r\n", &contexto);
+
+        if (!converter_numero(parte, &valores[j])) {
+            return 0;
+        }
+    }
+
+    if (strtok_r(NULL, " \t\r\n", &contexto) != NULL) {
+        return 0;
+    }
+
+    return 1;
+}
+int processar_comandos(banker *estado, const char *nome_arquivo, FILE *saida) {
+    if (estado == NULL || nome_arquivo == NULL || saida == NULL || estado->customers <= 0 || estado->resources <= 0) {
+        fprintf(stderr, "Erro: estado invalido para processar comandos.\n");
+        return 0;
+    }
+
+    FILE *arquivo = fopen(nome_arquivo, "r");
+    if (arquivo == NULL) {
+        fprintf(stderr, "Erro: nao foi possivel abrir %s.\n", nome_arquivo);
+        return 0;
+    }
+
+    int *valores = malloc(estado->resources * sizeof *valores);
+    if (valores == NULL) {
+        fprintf(stderr, "Erro: memoria insuficiente.\n");
+        fclose(arquivo);
+        return 0;
+    }
+
+    char *linha = NULL;
+    size_t capacidade = 0;
+    int numero_linha = 0;
+    int leitura_ok = 1;
+
+    while (getline(&linha, &capacidade, arquivo) != -1) {
+        numero_linha++;
+
+        char tipo;
+        int cliente = 0;
+
+        if (!interpretar_comando(linha, estado, &tipo, &cliente, valores)) {
+            fprintf(stderr, "Erro: comando invalido na linha %d de %s.\n", numero_linha, nome_arquivo);
+            leitura_ok = 0;
+            break;
+        }
+
+        if (tipo == '*') {
+            if (!imprimir_estado(saida, estado)) {
+                fprintf(stderr, "Erro ao escrever o resultado.\n");
+                leitura_ok = 0;
+                break;
+            }
+
+            continue;
+        }
+
+        if (tipo == 'Q') {
+            resultado_pedido resultado = request_resources(estado, cliente, valores);
+
+            if (resultado == PEDIDO_ERRO || !registrar_pedido(saida, estado, cliente, valores, resultado)) {
+                fprintf(stderr, "Erro ao processar o pedido da linha %d.\n", numero_linha);
+                leitura_ok = 0;
+                break;
+            }
+        } else {
+            if (!release_resources(estado, cliente, valores)) {
+                fprintf(stderr, "Erro: liberacao invalida na linha %d.\n",
+                        numero_linha);
+                leitura_ok = 0;
+                break;
+            }
+
+            if (!registrar_liberacao(saida, estado, cliente, valores)) {
+                fprintf(stderr, "Erro ao escrever o resultado.\n");
+                leitura_ok = 0;
+                break;
+            }
+        }
+    }
+
+    if (ferror(arquivo)) {
+        fprintf(stderr, "Erro ao ler %s.\n", nome_arquivo);
+        leitura_ok = 0;
+    }
+
+    if (numero_linha == 0 && leitura_ok) {
+        fprintf(stderr, "Erro: %s esta vazio.\n", nome_arquivo);
+        leitura_ok = 0;
+    }
+
+    free(linha);
+    free(valores);
+    fclose(arquivo);
+
+    return leitura_ok;
+}
