@@ -329,3 +329,40 @@ resultado_pedido request_resources(banker *estado, int cliente, const int pedido
 
     return PEDIDO_ACEITO;
 }
+int release_resources(banker *estado, int cliente, const int liberacao[]) {
+    if (estado == NULL || liberacao == NULL || estado->available == NULL || estado->allocation == NULL || estado->need == NULL || cliente < 0 || cliente >= estado->customers) {
+        return 0;
+    }
+
+    for (int j = 0; j < estado->resources; j++) {
+        if (liberacao[j] < 0 || liberacao[j] > estado->allocation[cliente][j]) {
+            return 0;
+        }
+    }
+
+    for (int j = 0; j < estado->resources; j++) {
+        estado->available[j] += liberacao[j];
+        estado->allocation[cliente][j] -= liberacao[j];
+        estado->need[cliente][j] += liberacao[j];
+    }
+
+    return 1;
+}
+
+void liberar_banqueiro(banker *estado) {
+    if (estado == NULL) {
+        return;
+    }
+
+    liberar_matriz(estado->maximum, estado->customers);
+    liberar_matriz(estado->allocation, estado->customers);
+    liberar_matriz(estado->need, estado->customers);
+    free(estado->available);
+
+    estado->maximum = NULL;
+    estado->allocation = NULL;
+    estado->need = NULL;
+    estado->available = NULL;
+    estado->customers = 0;
+    estado->resources = 0;
+}
