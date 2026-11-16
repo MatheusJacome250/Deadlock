@@ -92,6 +92,13 @@ int converter_numero(const char *texto, int *numero) {
     *numero = (int)valor;
     return 1;
 }
+char *pular_bom(char *linha) {
+    if (linha != NULL && strlen(linha) >= 3 && (unsigned char)linha[0] == 0xEF && (unsigned char)linha[1] == 0xBB && (unsigned char)linha[2] == 0xBF) {
+        return linha + 3;
+    }
+
+    return linha;
+}
 int ler_linha_cliente(char *linha, int recursos, int *valores) {
     if (linha == NULL || valores == NULL || recursos <= 0) {
         return 0;
@@ -155,7 +162,12 @@ int carregar_clientes(banker *estado, const char *nome_arquivo) {
             break;
         }
 
-        if (!ler_linha_cliente(linha, estado->resources, valores)) {
+        char *conteudo = linha;
+        if (estado->customers == 0) {
+            conteudo = pular_bom(linha);
+        }
+
+        if (!ler_linha_cliente(conteudo, estado->resources, valores)) {
             fprintf(stderr, "Erro: linha %d invalida em %s.\n", estado->customers + 1, nome_arquivo);
             free(valores);
             leitura_ok = 0;
@@ -562,10 +574,15 @@ int processar_comandos(banker *estado, const char *nome_arquivo, FILE *saida) {
     while (getline(&linha, &capacidade, arquivo) != -1) {
         numero_linha++;
 
+        char *conteudo = linha;
+        if (numero_linha == 1) {
+            conteudo = pular_bom(linha);
+        }
+
         char tipo;
         int cliente = 0;
 
-        if (!interpretar_comando(linha, estado, &tipo, &cliente, valores)) {
+        if (!interpretar_comando(conteudo, estado, &tipo, &cliente, valores)) {
             fprintf(stderr, "Erro: comando invalido na linha %d de %s.\n", numero_linha, nome_arquivo);
             leitura_ok = 0;
             break;
